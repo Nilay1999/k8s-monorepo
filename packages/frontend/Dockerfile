@@ -1,27 +1,20 @@
-# Stage 1: Build the React app
-FROM node:20 AS builder
+# Step 1: Build the React app
+FROM node:20 AS build
 
-COPY packages/frontend/package.json packages/frontend/yarn.lock ./
+WORKDIR /app
 
-WORKDIR /app/packages/frontend
+COPY package*.json ./
 
-# Install dependencies
 RUN yarn install
 
-# Copy the entire project
 COPY . .
 
-# Build the React app
 RUN yarn build
 
-# Stage 2: Serve the app with nginx
+# Step 2: Set up Nginx to serve the React app
 FROM nginx:stable-alpine
-
-# Copy the build files to nginx's default public directory
+COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80
 EXPOSE 80
-
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]

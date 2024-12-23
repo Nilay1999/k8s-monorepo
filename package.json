@@ -8,8 +8,9 @@
   "private": "true",
   "scripts": {
     "start": "lerna run --parallel start",
-    "build:backend":"yarn workspace server build",
-    "build:frontend": "yarn build --workspace packages/frontend"
+    "build:server": "yarn workspace server build",
+    "build:frontend": "yarn workspace frontend build",
+    "build": "yarn build:backend && yarn build:frontend"
   },
   "devDependencies": {
     "lerna": "^8.1.9",
